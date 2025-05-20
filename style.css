@@ -26,6 +26,10 @@ h3 {
   font-size: 1.5rem;
   color: #8b00ff;
   text-shadow: 1px 1px #ffccff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
 }
 
 .input-grid {
@@ -90,6 +94,7 @@ button:hover {
   gap: 20px;
   justify-content: space-between;
   margin-top: 30px;
+  align-items: flex-start;
 }
 
 .result-column {
@@ -115,6 +120,7 @@ button:hover {
   word-break: break-word;
   border: 1px dashed #ccc;
   border-radius: 8px;
+  margin-top: 10px;
 }
 
 .scroll-box a {
@@ -153,4 +159,12 @@ button:hover {
   color: #333;
   margin-left: 6px;
   font-weight: normal;
+}
+
+/* Optional: unified title layout */
+.result-column h3 span.count {
+  font-size: 1rem;
+  margin-left: 5px;
+  color: #444;
+  font-style: italic;
 }
