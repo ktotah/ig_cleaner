@@ -1,175 +1,129 @@
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
-/* --- BASE PAGE STYLE --- */
 body {
   font-family: 'VT323', monospace;
-  font-size: 18px;
-  background: linear-gradient(135deg, #ffd6f9, #ccf0ff);
-  background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
-  background-size: contain;
-  color: #330033;
+  background: linear-gradient(130deg, #fff1ff, #e6f7ff);
+  color: #2d003d;
   padding: 20px;
   max-width: 1200px;
   margin: auto;
-  line-height: 1.6;
+  background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
 }
 
-/* --- HEADERS --- */
 h1 {
   text-align: center;
-  font-size: 4rem;
-  color: #ff00ff;
-  margin-bottom: 30px;
-  text-shadow: 3px 3px #ffe1ff, 0 0 6px #ff80ff;
-  letter-spacing: 3px;
-  animation: glow 1.5s ease-in-out infinite alternate;
+  font-size: 3.5rem;
+  color: #ff00cc;
+  margin-bottom: 40px;
+  text-shadow: 2px 2px #ffb3ff;
+  letter-spacing: 1.5px;
 }
 
-@keyframes glow {
-  from {
-    text-shadow: 0 0 5px #ff66ff, 0 0 10px #ff33cc;
-  }
-  to {
-    text-shadow: 0 0 15px #ff66ff, 0 0 30px #ff33cc;
-  }
-}
-
-h3 {
-  font-size: 1.6rem;
-  color: #8b00ff;
-  text-shadow: 1px 1px #ffccff;
-  margin-bottom: 10px;
-}
-
-/* --- GRID LAYOUTS --- */
-.input-grid,
-.results-grid {
+.input-grid {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
-  justify-content: space-between;
   margin-bottom: 30px;
 }
 
-/* --- INPUT SECTIONS --- */
 .input-section {
   flex: 1;
   min-width: 300px;
-  background: #fff0fa;
+  background: #fff0fb;
   border: 3px double #ff99cc;
-  border-radius: 15px;
   padding: 20px;
-  box-shadow: 0 0 15px #ffccff;
-  backdrop-filter: blur(3px);
+  border-radius: 12px;
+  box-shadow: 0 0 12px #ffc0f0;
 }
 
 label {
-  font-size: 1.4rem;
-  color: #660066;
-  margin-bottom: 10px;
+  font-size: 1.3rem;
   display: block;
-  text-shadow: 1px 1px #ffefff;
+  margin-bottom: 10px;
+  color: #660066;
+  text-shadow: 1px 1px #fff;
 }
 
-/* --- TEXTAREAS --- */
 textarea {
   width: 100%;
-  height: 150px;
+  height: 160px;
   padding: 10px;
   font-family: 'VT323', monospace;
   font-size: 1rem;
   border: 2px dashed #bb66cc;
-  background: #fffaff;
   border-radius: 10px;
+  background: #fff8ff;
   resize: vertical;
-  box-shadow: inset 0 0 6px #ffccff;
-  color: #330033;
 }
 
-/* --- BUTTONS --- */
 button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 1.1rem;
   font-family: 'VT323', monospace;
-  font-size: 1.2rem;
-  padding: 12px 25px;
-  margin-top: 15px;
-  background: linear-gradient(to right, #ff00cc, #3333ff);
+  background: linear-gradient(to right, #ff00cc, #6600ff);
   color: white;
   border: 2px solid white;
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
-  text-transform: uppercase;
-  box-shadow: 4px 4px #999;
-  transition: all 0.3s ease;
+  box-shadow: 3px 3px #999;
+  transition: 0.2s ease;
 }
 
 button:hover {
-  background: linear-gradient(to right, #ff66cc, #6666ff);
-  box-shadow: 2px 2px #555;
-  transform: scale(1.03);
+  background: linear-gradient(to right, #ff66cc, #9999ff);
+  transform: scale(1.02);
 }
 
-/* --- COMPARISON SECTION --- */
 #compareSection {
   text-align: center;
-  margin-bottom: 30px;
-}
-
-#compareSection p {
+  margin-top: 30px;
+  font-size: 1.1rem;
   font-style: italic;
-  font-size: 1.2rem;
-  color: #550055;
-  text-shadow: 1px 1px #ffeeff;
+  color: #4b004b;
 }
 
-/* --- RESULTS GRID --- */
 .results-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 30px;
   align-items: flex-start;
 }
 
 .result-column {
   flex: 1;
   min-width: 300px;
-  background: #ffffffd9;
-  border: 3px solid #d2a3f0;
-  border-radius: 15px;
-  box-shadow: 0 0 15px #e4c7ff;
-  padding: 20px;
+  background: #fff0ff;
+  border: 2px solid #e0a9ff;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 0 10px #e9c5ff;
 }
 
-/* --- SCROLLABLE LISTS --- */
 .scroll-box {
   max-height: 300px;
   overflow-y: auto;
-  background: #fef9ff;
+  background: #fffaff;
   padding: 10px;
   font-family: monospace;
-  font-size: 1rem;
-  white-space: pre-line;
-  word-break: break-word;
-  border: 1px dashed #aaa;
-  border-radius: 10px;
-  box-shadow: inset 0 0 5px #e3c5ff;
+  font-size: 0.95rem;
+  border: 1px dashed #ccc;
+  border-radius: 8px;
+  margin-top: 10px;
 }
 
 .scroll-box a {
-  color: #5500aa;
+  color: #660066;
   text-decoration: none;
 }
 
 .scroll-box a:hover {
-  color: #a500d5;
+  color: #cc00cc;
   text-decoration: underline;
 }
 
-/* --- MISC CLASSES --- */
 .empty {
-  color: #999;
+  color: #aaa;
   font-style: italic;
-}
-
-.note {
-  font-size: 0.95rem;
-  color: #666;
-  font-style: italic;
-  margin-top: 10px;
 }
