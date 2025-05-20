@@ -29,10 +29,14 @@
   <h3>👀 They follow you, but you don’t follow back:</h3>
   <ul id="youDontFollowBack"></ul>
 
-  <h3>🧹 Entries we swept under the digital rug:</h3>
-  <p class="note">We cleaned up your lists to try and only reflect actual usernames — but here’s the junk we filtered out:</p>
-  <ul id="invalidEntries"></ul>
+  <button onclick="toggleInvalids()" id="toggleInvalidBtn">🧹 Show Swept Junk</button>
 
+  <div id="invalidSection" style="display: none; margin-top: 20px;">
+    <h3>🧹 Entries we swept under the digital rug:</h3>
+    <p class="note">We cleaned up your lists to try and only reflect actual usernames — but here’s the junk we filtered out:</p>
+    <ul id="invalidEntries"></ul>
+  </div>
+  
   <script>
     function extractUsernames(text, invalidCollector) {
       const lines = text.split('\n');
@@ -95,6 +99,15 @@
 
         loader.style.display = 'none';
       }, 1000); // fake "loading" delay
+    }
+    
+    function toggleInvalids() {
+        const section = document.getElementById('invalidSection');
+        const btn = document.getElementById('toggleInvalidBtn');
+        const isVisible = section.style.display === 'block';
+
+        section.style.display = isVisible ? 'none' : 'block';
+        btn.textContent = isVisible ? '🧹 Show Swept Junk' : '🙈 Hide Swept Junk';
     }
   </script>
 </body>
