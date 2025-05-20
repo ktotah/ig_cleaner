@@ -1,79 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Instagram Follower Cleaner</title>
-    <link rel="stylesheet" href="style.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Instagram List Cleaner</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-      
 <body>
-  <h1>✨ IG List Cleaner ✨</h1>
+  <h1>✨ Instagram Username Cleaner ✨</h1>
 
-  <label><strong>Paste Followers List:</strong></label><br/>
-  <textarea id="followersInput" placeholder="Paste followers text here..."></textarea><br/>
+  <div class="input-group">
+    <label for="followersInput">Paste Followers List:</label>
+    <textarea id="followersInput" placeholder="Paste followers list here..."></textarea>
+  </div>
 
-  <label><strong>Paste Following List:</strong></label><br/>
-  <textarea id="followingInput" placeholder="Paste following text here..."></textarea><br/>
+  <div class="input-group">
+    <label for="followingInput">Paste Following List:</label>
+    <textarea id="followingInput" placeholder="Paste following list here..."></textarea>
+  </div>
 
   <button onclick="compareLists()">Compare</button>
+  <div id="loader" class="loader">Scanning... Beep boop 🤖</div>
 
-  <div id="loader" class="loader">Scanning your lists… Beep boop 🤖✨</div>
+  <div class="results-grid">
+    <div class="result-column">
+      <h3>👀 They follow you, but you don’t follow back</h3>
+      <div class="scroll-box" id="youDontFollowBack"></div>
+    </div>
 
-  <h3>✅ Mutuals (follow each other):</h3>
-  <ul id="mutuals"></ul>
+    <div class="result-column">
+      <h3>🚫 You follow them, but they don’t follow you back</h3>
+      <div class="scroll-box" id="notFollowingBack"></div>
+    </div>
 
-  <h3>🚫 You follow them, but they don’t follow you back:</h3>
-  <ul id="notFollowingBack"></ul>
-
-  <h3>👀 They follow you, but you don’t follow back:</h3>
-  <ul id="youDontFollowBack"></ul>
+    <div class="result-column">
+      <h3>✅ Mutuals (follow each other)</h3>
+      <div class="scroll-box" id="mutuals"></div>
+    </div>
+  </div>
 
   <button onclick="toggleInvalids()" id="toggleInvalidBtn">🧹 Show Swept Junk</button>
 
-  <div id="invalidSection" style="display: none; margin-top: 20px;">
-    <h3>🧹 Entries we swept under the digital rug:</h3>
-    <p class="note">We cleaned up your lists to try and only reflect actual usernames — but here’s the junk we filtered out:</p>
-    <ul id="invalidEntries"></ul>
+  <div id="invalidSection" style="display: none;">
+    <h3>🧹 Entries we swept under the digital rug</h3>
+    <p class="note">We cleaned your lists to only reflect real usernames. Here's the junk we filtered out:</p>
+    <div class="scroll-box" id="invalidEntries"></div>
   </div>
-  
+
   <script>
-    function extractUsernames(text, invalidCollector) {
-      const lines = text.split('\n');
-      const validUsernames = [];
-      const seenInvalid = new Set();
-      const usernameRegex = /^[a-z0-9._]+$/;
+    function isValidUsername(str) {
+      return /^[a-z0-9._]{1,30}$/.test(str.trim());
+    }
+
+    function extractValidLines(rawText, invalidCollector) {
+      const lines = rawText.split('\n').map(line => line.trim());
+      const valid = [];
+      const invalid = [];
 
       for (let line of lines) {
-        const possibleWords = line.trim().split(/\s+/);
-        for (let word of possibleWords) {
-          if (usernameRegex.test(word)) {
-            validUsernames.push(word);
-          } else if (word.length > 1 && !usernameRegex.test(word)) {
-            seenInvalid.add(word);
-          }
+        if (line && isValidUsername(line)) {
+          valid.push(line);
+        } else if (line) {
+          invalid.push(line);
         }
       }
 
-      if (invalidCollector) {
-        invalidCollector.push(...seenInvalid);
-      }
-
-      return [...new Set(validUsernames)];
+      if (invalidCollector) invalidCollector.push(...invalid);
+      return [...new Set(valid)];
     }
 
-    function displayList(id, data) {
-      const container = document.getElementById(id);
-      container.innerHTML = data.length
-        ? data.map(u => `<li><a href="https://instagram.com/${u}" target="_blank">${u}</a></li>`).join('')
-        : '<li>None</li>';
-    }
-
-    function displayInvalid(id, data) {
-      const container = document.getElementById(id);
-      container.innerHTML = data.length
-        ? data.map(u => `<li>${u}</li>`).join('')
-        : '<li>None</li>';
+    function displayList(id, usernames) {
+      const el = document.getElementById(id);
+      el.innerHTML = usernames.length
+        ? usernames.map(u => `<a href="https://instagram.com/${u}" target="_blank">${u}</a>`).join('<br>')
+        : '<span class="empty">None</span>';
     }
 
     function compareLists() {
@@ -81,12 +81,9 @@
       loader.style.display = 'block';
 
       setTimeout(() => {
-        const followersRaw = document.getElementById('followersInput').value;
-        const followingRaw = document.getElementById('followingInput').value;
-
-        const invalidEntries = [];
-        const followers = extractUsernames(followersRaw, invalidEntries);
-        const following = extractUsernames(followingRaw, invalidEntries);
+        const invalid = [];
+        const followers = extractValidLines(document.getElementById('followersInput').value, invalid);
+        const following = extractValidLines(document.getElementById('followingInput').value, invalid);
 
         const mutuals = followers.filter(u => following.includes(u));
         const notFollowingBack = following.filter(u => !followers.includes(u));
@@ -95,19 +92,18 @@
         displayList('mutuals', mutuals);
         displayList('notFollowingBack', notFollowingBack);
         displayList('youDontFollowBack', youDontFollowBack);
-        displayInvalid('invalidEntries', [...new Set(invalidEntries)]);
+        displayList('invalidEntries', [...new Set(invalid)]);
 
         loader.style.display = 'none';
-      }, 1000); // fake "loading" delay
+      }, 800);
     }
-    
-    function toggleInvalids() {
-        const section = document.getElementById('invalidSection');
-        const btn = document.getElementById('toggleInvalidBtn');
-        const isVisible = section.style.display === 'block';
 
-        section.style.display = isVisible ? 'none' : 'block';
-        btn.textContent = isVisible ? '🧹 Show Swept Junk' : '🙈 Hide Swept Junk';
+    function toggleInvalids() {
+      const section = document.getElementById('invalidSection');
+      const btn = document.getElementById('toggleInvalidBtn');
+      const visible = section.style.display === 'block';
+      section.style.display = visible ? 'none' : 'block';
+      btn.textContent = visible ? '🧹 Show Swept Junk' : '🙈 Hide Swept Junk';
     }
   </script>
 </body>
