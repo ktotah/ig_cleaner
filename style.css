@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
+/* Base layout styling */
 body {
   font-family: 'VT323', monospace;
   background: linear-gradient(to bottom right, #f9f0ff, #d8f0ff);
@@ -22,36 +23,49 @@ h3 {
   color: #4b0082;
 }
 
-.input-group {
-  margin-bottom: 20px;
+/* Grid for side-by-side input */
+.input-grid {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
 }
 
+.input-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Textarea styling */
 textarea {
   width: 100%;
-  height: 100px;
+  height: 150px;
   padding: 10px;
   font-family: 'VT323', monospace;
   font-size: 1.1rem;
   border: 2px dashed #888;
   background: #fffefa;
+  resize: vertical;
 }
 
+/* Buttons */
 button {
   font-family: 'VT323', monospace;
   font-size: 1.2rem;
   padding: 10px 20px;
-  background: #ff90e8;
+  background-color: #ff90e8;
   color: white;
   border: none;
-  margin: 20px 0;
+  margin-top: 10px;
   cursor: pointer;
   box-shadow: 2px 2px #999;
 }
 
 button:hover {
-  background: #f062c5;
+  background-color: #f062c5;
 }
 
+/* Loader animation (optional) */
 .loader {
   display: none;
   font-size: 1rem;
@@ -67,6 +81,7 @@ button:hover {
   }
 }
 
+/* Results section */
 .results-grid {
   display: flex;
   gap: 20px;
@@ -89,6 +104,7 @@ button:hover {
   word-break: break-word;
 }
 
+/* Link appearance */
 a {
   color: #333;
   text-decoration: none;
@@ -99,6 +115,7 @@ a:hover {
   color: #8a2be2;
 }
 
+/* Subtle note text */
 .note {
   font-style: italic;
   color: #666;
@@ -107,6 +124,7 @@ a:hover {
   margin-bottom: 15px;
 }
 
+/* For empty list display */
 .empty {
   color: #999;
 }

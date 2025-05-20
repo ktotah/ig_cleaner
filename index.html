@@ -2,108 +2,121 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Instagram List Cleaner</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instagram Username Cleaner</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <h1>✨ Instagram Username Cleaner ✨</h1>
+  <h1>🧼 Instagram Username Cleaner</h1>
 
-  <div class="input-group">
-    <label for="followersInput">Paste Followers List:</label>
-    <textarea id="followersInput" placeholder="Paste followers list here..."></textarea>
+  <!-- Input section for followers and following lists -->
+  <div class="input-grid">
+    <!-- Followers input -->
+    <div class="input-section">
+      <label for="followersInput">Followers List (<span id="followersCount">0</span> entries)</label>
+      <textarea id="followersInput" oninput="updateCount('followersInput', 'followersCount')"></textarea>
+      <button onclick="cleanList('followersInput', 'cleanedFollowers', 'invalidFollowers', 'followersCount')">Clean Followers List</button>
+    </div>
+
+    <!-- Following input -->
+    <div class="input-section">
+      <label for="followingInput">Following List (<span id="followingCount">0</span> entries)</label>
+      <textarea id="followingInput" oninput="updateCount('followingInput', 'followingCount')"></textarea>
+      <button onclick="cleanList('followingInput', 'cleanedFollowing', 'invalidFollowing', 'followingCount')">Clean Following List</button>
+    </div>
   </div>
 
-  <div class="input-group">
-    <label for="followingInput">Paste Following List:</label>
-    <textarea id="followingInput" placeholder="Paste following list here..."></textarea>
+  <!-- Compare section appears only after both lists are cleaned -->
+  <div id="compareSection" style="display: none; margin-top: 20px;">
+    <p>Once we’ve narrowed your lists to actual usernames, hit compare to see who’s ghosting you:</p>
+    <button onclick="compareLists()">Compare Cleaned Lists</button>
   </div>
 
-  <button onclick="compareLists()">Compare</button>
-  <div id="loader" class="loader">Scanning... Beep boop 🤖</div>
-
-  <div class="results-grid">
+  <!-- Results of comparison shown in three columns -->
+  <div class="results-grid" id="results" style="display: none;">
     <div class="result-column">
       <h3>👀 They follow you, but you don’t follow back</h3>
       <div class="scroll-box" id="youDontFollowBack"></div>
     </div>
-
     <div class="result-column">
       <h3>🚫 You follow them, but they don’t follow you back</h3>
       <div class="scroll-box" id="notFollowingBack"></div>
     </div>
-
     <div class="result-column">
       <h3>✅ Mutuals (follow each other)</h3>
       <div class="scroll-box" id="mutuals"></div>
     </div>
   </div>
 
-  <button onclick="toggleInvalids()" id="toggleInvalidBtn">🧹 Show Swept Junk</button>
-
-  <div id="invalidSection" style="display: none;">
-    <h3>🧹 Entries we swept under the digital rug</h3>
-    <p class="note">We cleaned your lists to only reflect real usernames. Here's the junk we filtered out:</p>
-    <div class="scroll-box" id="invalidEntries"></div>
-  </div>
-
   <script>
+    // Check if a string is a valid Instagram username
     function isValidUsername(str) {
       return /^[a-z0-9._]{1,30}$/.test(str.trim());
     }
 
-    function extractValidLines(rawText, invalidCollector) {
-      const lines = rawText.split('\n').map(line => line.trim());
-      const valid = [];
-      const invalid = [];
+    // Update visible line count as user types
+    function updateCount(inputId, countId) {
+      const lines = document.getElementById(inputId).value.split('\n').filter(line => line.trim() !== '');
+      document.getElementById(countId).textContent = lines.length;
+    }
 
-      for (let line of lines) {
-        if (line && isValidUsername(line)) {
-          valid.push(line);
-        } else if (line) {
-          invalid.push(line);
-        }
+    // Clean a list by filtering out invalid usernames
+    function cleanList(inputId, cleanOutputId, invalidOutputId, countId) {
+      const raw = document.getElementById(inputId).value;
+      const lines = raw.split('\n').map(line => line.trim()).filter(line => line);
+      const valid = [], invalid = [];
+
+      // Classify each line as valid or invalid
+      lines.forEach(line => {
+        if (isValidUsername(line)) valid.push(line);
+        else invalid.push(line);
+      });
+
+      // Replace textarea content with cleaned list
+      document.getElementById(inputId).value = valid.join('\n');
+      document.getElementById(countId).textContent = valid.length;
+
+      // Notify user and log invalid entries
+      if (invalidOutputId) {
+        alert(`${invalid.length} invalid entries swept under the rug.`);
+        console.log(`Invalid entries from ${inputId}:`, invalid);
       }
 
-      if (invalidCollector) invalidCollector.push(...invalid);
-      return [...new Set(valid)];
+      // Show compare section only if both lists are cleaned
+      checkCompareReady();
     }
 
-    function displayList(id, usernames) {
-      const el = document.getElementById(id);
-      el.innerHTML = usernames.length
-        ? usernames.map(u => `<a href="https://instagram.com/${u}" target="_blank">${u}</a>`).join('<br>')
-        : '<span class="empty">None</span>';
+    // Check if both textareas have valid content
+    function checkCompareReady() {
+      const followers = document.getElementById('followersInput').value.trim();
+      const following = document.getElementById('followingInput').value.trim();
+      if (followers && following) {
+        document.getElementById('compareSection').style.display = 'block';
+      }
     }
 
+    // Compare cleaned followers and following lists
     function compareLists() {
-      const loader = document.getElementById('loader');
-      loader.style.display = 'block';
+      const followers = document.getElementById('followersInput').value.split('\n').map(s => s.trim());
+      const following = document.getElementById('followingInput').value.split('\n').map(s => s.trim());
 
-      setTimeout(() => {
-        const invalid = [];
-        const followers = extractValidLines(document.getElementById('followersInput').value, invalid);
-        const following = extractValidLines(document.getElementById('followingInput').value, invalid);
+      const mutuals = followers.filter(u => following.includes(u));
+      const notFollowingBack = following.filter(u => !followers.includes(u));
+      const youDontFollowBack = followers.filter(u => !following.includes(u));
 
-        const mutuals = followers.filter(u => following.includes(u));
-        const notFollowingBack = following.filter(u => !followers.includes(u));
-        const youDontFollowBack = followers.filter(u => !following.includes(u));
+      renderList('mutuals', mutuals);
+      renderList('notFollowingBack', notFollowingBack);
+      renderList('youDontFollowBack', youDontFollowBack);
 
-        displayList('mutuals', mutuals);
-        displayList('notFollowingBack', notFollowingBack);
-        displayList('youDontFollowBack', youDontFollowBack);
-        displayList('invalidEntries', [...new Set(invalid)]);
-
-        loader.style.display = 'none';
-      }, 800);
+      document.getElementById('results').style.display = 'flex';
     }
 
-    function toggleInvalids() {
-      const section = document.getElementById('invalidSection');
-      const btn = document.getElementById('toggleInvalidBtn');
-      const visible = section.style.display === 'block';
-      section.style.display = visible ? 'none' : 'block';
-      btn.textContent = visible ? '🧹 Show Swept Junk' : '🙈 Hide Swept Junk';
+    // Render a list of usernames as links in a container
+    function renderList(containerId, data) {
+      const el = document.getElementById(containerId);
+      el.innerHTML = data.length
+        ? data.map(u => `<a href="https://instagram.com/${u}" target="_blank">${u}</a>`).join('<br>')
+        : '<span class="empty">None</span>';
     }
   </script>
 </body>
