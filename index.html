@@ -10,35 +10,41 @@
   <h1>✨ Who Follows Who? ✨</h1>
 
   <div class="input-grid">
+    <!-- Followers -->
     <div class="input-section">
-      <label for="followersInput">Followers <span id="followersCount">(0 entries)</span></label>
-      <textarea id="followersInput" placeholder="Paste your followers here" oninput="updateCount('followers')"></textarea>
-      <button onclick="cleanList('followers')">Clean Followers</button>
+      <label for="followersInput">
+        Followers <span id="followersCount">(0 entries)</span>
+      </label>
+      <textarea id="followersInput" placeholder="Paste your followers here"></textarea>
+      <button id="cleanFollowers">Clean Followers</button>
     </div>
 
+    <!-- Following -->
     <div class="input-section">
-      <label for="followingInput">Following <span id="followingCount">(0 entries)</span></label>
-      <textarea id="followingInput" placeholder="Paste your following here" oninput="updateCount('following')"></textarea>
-      <button onclick="cleanList('following')">Clean Following</button>
+      <label for="followingInput">
+        Following <span id="followingCount">(0 entries)</span>
+      </label>
+      <textarea id="followingInput" placeholder="Paste your following here"></textarea>
+      <button id="cleanFollowing">Clean Following</button>
     </div>
   </div>
 
   <div id="compareSection" style="display: none;">
     <p>Once you've cleaned both lists, hit compare to reveal the tea 👀</p>
-    <button onclick="compareLists()">Compare Cleaned Lists</button>
+    <button id="compareBtn">Compare Cleaned Lists</button>
   </div>
 
   <div id="results" class="results-grid" style="display: none;">
     <div class="result-column">
-      <h3>They Follow You, But You Don’t</h3>
+      <h3>👀 They Follow You, But You Don’t Follow Them Back<span id="youDontFollowBack-count" class="count">(0)</span></h3>
       <div class="scroll-box" id="youDontFollowBack"></div>
     </div>
     <div class="result-column">
-      <h3>You Follow Them, But They Don’t</h3>
+      <h3>🚫 You Follow Them, But They Don’t Follw You Back<span id="notFollowingBack-count" class="count">(0)</span></h3>
       <div class="scroll-box" id="notFollowingBack"></div>
     </div>
     <div class="result-column">
-      <h3>Mutuals 💞</h3>
+      <h3>✅ Mutuals (you both follow each other) <span id="mutuals-count" class="count">(0)</span></h3>
       <div class="scroll-box" id="mutuals"></div>
     </div>
   </div>
