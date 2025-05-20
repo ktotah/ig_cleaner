@@ -13,14 +13,14 @@
   <div class="input-grid">
     <!-- Followers input -->
     <div class="input-section">
-      <label for="followersInput">Followers List (<span id="followersCount">0</span> entries)</label>
+      <label for="followersInput">Followers List (<span id="followersCount">0</span> valid entries)</label>
       <textarea id="followersInput" oninput="updateCount('followersInput', 'followersCount')"></textarea>
       <button onclick="cleanList('followersInput', 'cleanedFollowers', 'invalidFollowers', 'followersCount')">Clean Followers List</button>
     </div>
 
     <!-- Following input -->
     <div class="input-section">
-      <label for="followingInput">Following List (<span id="followingCount">0</span> entries)</label>
+      <label for="followingInput">Following List (<span id="followingCount">0</span> valid entries)</label>
       <textarea id="followingInput" oninput="updateCount('followingInput', 'followingCount')"></textarea>
       <button onclick="cleanList('followingInput', 'cleanedFollowing', 'invalidFollowing', 'followingCount')">Clean Following List</button>
     </div>
@@ -28,7 +28,7 @@
 
   <!-- Compare section appears only after both lists are cleaned -->
   <div id="compareSection" style="display: none; margin-top: 20px;">
-    <p>Once we’ve narrowed your lists to actual usernames, hit compare to see who’s ghosting you:</p>
+    <p>Once your lists are properly cleaned and contain only valid usernames, hit compare to reveal the tea:</p>
     <button onclick="compareLists()">Compare Cleaned Lists</button>
   </div>
 
@@ -49,44 +49,38 @@
   </div>
 
   <script>
-    // Check if a string is a valid Instagram username
     function isValidUsername(str) {
       return /^[a-z0-9._]{1,30}$/.test(str.trim());
     }
 
-    // Update visible line count as user types
     function updateCount(inputId, countId) {
-      const lines = document.getElementById(inputId).value.split('\n').filter(line => line.trim() !== '');
-      document.getElementById(countId).textContent = lines.length;
+      const raw = document.getElementById(inputId).value;
+      const lines = raw.split('\n').map(l => l.trim()).filter(Boolean);
+      const validCount = lines.filter(isValidUsername).length;
+      document.getElementById(countId).textContent = validCount;
     }
 
-    // Clean a list by filtering out invalid usernames
     function cleanList(inputId, cleanOutputId, invalidOutputId, countId) {
       const raw = document.getElementById(inputId).value;
       const lines = raw.split('\n').map(line => line.trim()).filter(line => line);
       const valid = [], invalid = [];
 
-      // Classify each line as valid or invalid
       lines.forEach(line => {
         if (isValidUsername(line)) valid.push(line);
         else invalid.push(line);
       });
 
-      // Replace textarea content with cleaned list
       document.getElementById(inputId).value = valid.join('\n');
       document.getElementById(countId).textContent = valid.length;
 
-      // Notify user and log invalid entries
-      if (invalidOutputId) {
+      if (invalid.length) {
         alert(`${invalid.length} invalid entries swept under the rug.`);
         console.log(`Invalid entries from ${inputId}:`, invalid);
       }
 
-      // Show compare section only if both lists are cleaned
       checkCompareReady();
     }
 
-    // Check if both textareas have valid content
     function checkCompareReady() {
       const followers = document.getElementById('followersInput').value.trim();
       const following = document.getElementById('followingInput').value.trim();
@@ -95,7 +89,6 @@
       }
     }
 
-    // Compare cleaned followers and following lists
     function compareLists() {
       const followers = document.getElementById('followersInput').value.split('\n').map(s => s.trim());
       const following = document.getElementById('followingInput').value.split('\n').map(s => s.trim());
@@ -111,7 +104,6 @@
       document.getElementById('results').style.display = 'flex';
     }
 
-    // Render a list of usernames as links in a container
     function renderList(containerId, data) {
       const el = document.getElementById(containerId);
       el.innerHTML = data.length
